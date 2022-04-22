@@ -20,7 +20,7 @@ spec:
         fsGroup: 3000
       containers:
       - name: kube-test-container
-        image: sverrirab/kube-test-container:v1.0
+        image: naveedyahyazadeh/json-test-container:latest
         imagePullPolicy: IfNotPresent
         resources:
           limits:
