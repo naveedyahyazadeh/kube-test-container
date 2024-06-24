@@ -1,20 +1,30 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ .Values.service.name }}
   labels:
+    app: {{ .Values.service.name }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
   replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.service.name }}
   template:
     metadata:
       labels:
-        app: {{ template "fullname" . }}
+        app: {{ .Values.service.name }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 1
+          periodSeconds: 1
         ports:
         - containerPort: {{ .Values.service.internalPort }}
         resources:
